@@ -159,8 +159,7 @@ defmodule Tus.Storage.S3 do
   Delete an uploaded object
   """
   def delete(file, config) do
-    ""
-    |> ExAws.S3.delete_object(file_path(config, file))
+    ExAws.S3.delete_object(config.s3_bucket, file_path(config, file))
     |> ExAws.request(host: host(config))
   end
 end
