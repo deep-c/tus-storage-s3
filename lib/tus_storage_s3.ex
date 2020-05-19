@@ -98,8 +98,13 @@ defmodule Tus.Storage.S3 do
   def create(file, config) do
     host = host(config)
     file_path = file_path(config, file)
+    opts_meta = Map.new()
+    |> Map.put(:filename, Kernel.get_in(file.metadata, ["filename"]))
+    opts = Map.new()
+    |> Map.put(:content_type, Kernel.get_in(file.metadata, ["filetype"]))
+    |> Map.put(:meta, opts_meta)    
 
-    %{bucket: config.s3_bucket, path: file_path, opts: [], upload_id: nil}
+    %{bucket: config.s3_bucket, path: file_path, opts: opts, upload_id: nil}
     |> S3.Upload.initialize(host: host)
     |> case do
       {:ok, rs} ->
